@@ -37,12 +37,12 @@ jobs:
       - name: Push Result
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp.office365.com
+          server_address: smtp.gmail.com
           server_port: 587
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: ZogeMung Automate job result
           to: ${{ secrets.MAIL_RECEIVER_ZogeMung }}
           from: ZogeMung Automate
-          secure: false
+          secure: true
           body: file://email.txt
