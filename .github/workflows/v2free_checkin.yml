@@ -1,7 +1,7 @@
 name: v2free_checkin
 on:
-  # schedule:
-  #   - cron: '* * * * *'
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch:
 jobs:
   v2free_checkin:
@@ -10,12 +10,13 @@ jobs:
       - name: Run
         shell: python
         env:
-          cookie: ${{ secrets.v2free_checkin_cookie }}
+          cookie: ${{ secrets.V2FREE_CHECKIN_COOKIE }}
+          url: ${{ secrets.V2FREE_CHECKIN_URL }}
         run: |
           import requests
           import os
           import json
-          url = 'https://w1.v2free.net/user/checkin'
+          url = os.environ['url']
           headers = {
             'Content-Type':'application/json',
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62',
@@ -41,7 +42,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: ZogeMung Automate job result
+          subject: v2free_checkin
           to: ${{ secrets.MAIL_RECEIVER_ZogeMung }}
           from: ZogeMung Automate
           secure: true
