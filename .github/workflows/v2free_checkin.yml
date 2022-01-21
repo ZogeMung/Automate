@@ -44,5 +44,4 @@ jobs:
           subject: ZogeMung Automate job result
           to: ${{ secrets.MAIL_RECEIVER_ZogeMung }}
           from: ZogeMung Automate
-          secure: true
           body: file://email.txt
