@@ -13,6 +13,7 @@ jobs:
           cookie: ${{ secrets.v2free_checkin_cookie }}
         run: |
           import requests
+          import os
           url = 'https://w1.v2free.net/user/checkin'
           headers = {
             'Content-Type':'application/json',
