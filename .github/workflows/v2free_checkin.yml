@@ -4,7 +4,7 @@ on:
   #   - cron: '* * * * *'
   workflow_dispatch:
 jobs:
-  build:
+  v2free_checkin:
     runs-on: ubuntu-latest
     steps:
       - name: Run
@@ -13,7 +13,7 @@ jobs:
           cookie: ${{ secrets.v2free_checkin_cookie }}
         run: |
           import requests
-          url = https://w1.v2free.net/user/checkin
+          url = 'https://w1.v2free.net/user/checkin'
           headers = {
             'Content-Type':'application/json',
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62',
