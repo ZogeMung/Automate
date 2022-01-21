@@ -1,0 +1,49 @@
+name: sakura_checkin
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+jobs:
+  sakura_checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run
+        shell: python
+        env:
+          cookie: ${{ secrets.SAKURA_CHECKIN_COOKIE }}
+          url: ${{ secrets.SAKURA_CHECKIN_URL }}
+        run: |
+          import requests
+          import os
+          import json
+          url = os.environ['url']
+          headers = {
+            'Content-Type':'application/json',
+            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.62',
+            'Accept-Encoding':'gzip, deflate, br',
+            'Cookie':os.environ['cookie']
+          }
+          res = requests.post(url = url, headers = headers)
+          f = open('./email.txt', 'w')
+          if(len(res.text) > 2000):
+            f.write('Update cookie! ')
+          else:
+            data = json.loads(res.text)
+            try:
+              content = '信息：' + data['msg'] + '\n剩余流量：' + data['trafficInfo']['unUsedTraffic']
+            except Exception as e:
+              content = '信息：' + data['msg']
+            f.write(content)
+          f.close()
+      - name: Push Result
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.exmail.qq.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: sakura_checkin
+          to: ${{ secrets.MAIL_RECEIVER_ZogeMung }}
+          from: ZogeMung Automate
+          secure: true
+          body: file://email.txt
