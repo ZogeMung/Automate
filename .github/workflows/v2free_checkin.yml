@@ -1,6 +1,6 @@
 name: v2free_checkin
 on:
-  # schedule: 
+  # schedule:
   #   - cron: '* * * * *'
   workflow_dispatch:
 jobs:
@@ -9,11 +9,12 @@ jobs:
     steps:
       - name: Run
         shell: python
-        env: 
+        env:
           cookie: ${{ secrets.v2free_checkin_cookie }}
         run: |
           import requests
           import os
+          import json
           url = 'https://w1.v2free.net/user/checkin'
           headers = {
             'Content-Type':'application/json',
@@ -22,4 +23,23 @@ jobs:
             'Cookie':os.environ['cookie']
           }
           res = requests.post(url = url, headers = headers)
-          print(res.text)
+          f = open('./email.txt', 'w')
+          if(res.length > 2000):
+            f.write('Update cookie! ')
+          else:
+            data = json.loads(res.text)
+            content = '信息：' + data.msg + '\n剩余流量：' + data.trafficInfo.unUsedTraffic
+            f.write(content)
+          f.close()
+      - name: Push Result
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: ZogeMung Automate job result
+          to: ${{ secrets.MAIL_RECEIVER_ZogeMung }}
+          from: ZogeMung Automate
+          secure: true
+          body: file://email.txt
