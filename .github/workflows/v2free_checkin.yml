@@ -28,7 +28,10 @@ jobs:
             f.write('Update cookie! ')
           else:
             data = json.loads(res.text)
-            content = '信息：' + data['msg'] + '\n剩余流量：' + data['trafficInfo']['unUsedTraffic']
+            try:
+              content = '信息：' + data['msg'] + '\n剩余流量：' + data['trafficInfo']['unUsedTraffic']
+            except Exception as e:
+              content = '信息：' + data['msg']
             f.write(content)
           f.close()
       - name: Push Result
