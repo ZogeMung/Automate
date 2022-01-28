@@ -28,11 +28,14 @@ jobs:
           if(len(res.text) > 2000):
             f.write('Update cookie! ')
           else:
-            data = json.loads(res.text)
             try:
-              content = '信息：' + data['msg'] + '\n剩余流量：' + data['trafficInfo']['unUsedTraffic']
+              data = json.loads(res.text)
+              try:
+                content = '信息：' + data['msg'] + '\n剩余流量：' + data['trafficInfo']['unUsedTraffic']
+              except Exception as e:
+                content = '信息：' + data['msg']
             except Exception as e:
-              content = '信息：' + data['msg']
+              content = '获取错误'
             f.write(content)
           f.close()
       - name: Push Result
